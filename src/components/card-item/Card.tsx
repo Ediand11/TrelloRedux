@@ -1,9 +1,9 @@
 import { FC, useState } from "react";
-import { Id, Task } from "../types/types";
-import Popup from "./UI/Popup";
-import { CardSpan, CardTextArea } from "./UI/CardItems";
-import { Button } from "./UI/Button";
-import CommentItem from "./UI/CommentItem";
+import { Id, Task } from "../../types/types";
+import Popup from "../popup-item/Popup";
+import { CardSpan, CardTextArea } from "./CardItems";
+import { Button } from "../UI/Button";
+import CommentItem from "../comment-item/CommentItem";
 
 type TCardProps = {
   task: Task;

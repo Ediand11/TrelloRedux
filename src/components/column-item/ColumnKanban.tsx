@@ -1,8 +1,8 @@
 import { FC } from "react";
-import Card from "./Card";
-import { Id, Task } from "../types/types";
-import { Container, Input } from "./UI/BoardItems";
-import { Button } from "./UI/Button";
+import Card from "../card-item/Card";
+import { Id, Task } from "../../types/types";
+import { Container, Input } from "../board-item/BoardItems";
+import { Button } from "../UI/Button";
 
 type ColumnNameProps = {
   column: any;

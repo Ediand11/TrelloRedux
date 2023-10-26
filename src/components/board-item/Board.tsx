@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useState } from "react";
-import ColumnKanban from "./ColumnKanban";
-import { Column, Id, Task } from "../types/types";
-import { Container, Header, Input } from "./UI/BoardItems";
-import Popup from "./UI/Popup";
-import { Button } from "./UI/Button";
-import { Comment } from "../types/types";
+import ColumnKanban from "../column-item/ColumnKanban";
+import { Column, Id, Task } from "../../types/types";
+import { Container, Header, Input } from "./BoardItems";
+import Popup from "../popup-item/Popup";
+import { Button } from "../UI/Button";
+import { Comment } from "../../types/types";
 
 const Board: FC = () => {
   const defaultColumns: Column[] = [
