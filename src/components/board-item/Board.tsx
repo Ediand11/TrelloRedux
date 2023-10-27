@@ -1,19 +1,15 @@
-import React, { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import ColumnKanban from "../column-item/ColumnKanban";
-import { Column, Id, Task } from "../../types/types";
+import { Id, Task } from "../../types/types";
 import { Container, Header, Input } from "./BoardItems";
 import Popup from "../popup-item/Popup";
 import { Button } from "../UI/Button";
 import { Comment } from "../../types/types";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { createColumn } from "../../redux/columns";
 
 const Board: FC = () => {
-  const defaultColumns: Column[] = [
-    { id: "todo", title: "TODO" },
-    { id: "doing", title: "In Progress" },
-    { id: "testing", title: "Testing" },
-    { id: "done", title: "Done" },
-  ];
-
   const defaultTasks: Task[] = [
     {
       id: "1",
@@ -132,9 +128,8 @@ const Board: FC = () => {
     },
   ];
 
-  const [columns, setColumns] = useState<Column[]>(
-    JSON.parse(localStorage.getItem("columns") || "null") || defaultColumns
-  );
+  const dispatch = useDispatch();
+  const columns = useSelector((state: RootState) => state.columns);
 
   const [tasks, setTasks] = useState<Task[]>(
     JSON.parse(localStorage.getItem("tasks") || "null") || defaultTasks
@@ -143,12 +138,6 @@ const Board: FC = () => {
   const [user, setUser] = useState<string>(
     JSON.parse(localStorage.getItem("user") || "null") || ""
   );
-
-  const handleNameChange = (index: number, newName: string) => {
-    const newColumnNames = [...columns];
-    newColumnNames[index].title = newName;
-    setColumns(newColumnNames);
-  };
 
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(user));
@@ -163,21 +152,6 @@ const Board: FC = () => {
   }, [tasks]);
 
   //Позже вынести функции в отдельный файл
-  function createNewColumn() {
-    const columnToAdd: Column = {
-      id: Math.floor(Math.random() * 10001),
-      title: `Column ${columns.length + 1}`,
-    };
-
-    setColumns([...columns, columnToAdd]);
-  }
-
-  function deleteColumn(id: Id) {
-    const filteredColumns = columns.filter((col) => col.id !== id);
-    setColumns(filteredColumns);
-    const newTasks = tasks.filter((task) => task.columnId !== id);
-    setTasks([...newTasks]);
-  }
 
   function createTask(userName: string, columnId: Id) {
     const newTask: Task = {
@@ -284,24 +258,25 @@ const Board: FC = () => {
           </Popup>
         )}
 
-        {columns.map((column, index) => (
+        {columns.map((column) => (
           <ColumnKanban
             key={column.id}
             column={column}
-            onChangeName={(newName) => handleNameChange(index, newName)}
-            deleteColumn={() => deleteColumn(column.id)}
+            //Tasks
             tasks={tasks.filter((task) => task.columnId === column.id)}
             addNewTask={createTask}
             updateTask={updateTask}
             deleteTask={deleteTask}
+            //Comment
             addComment={addComment}
             deleteComment={deleteComment}
             updateComment={updateComment}
+            //User
             user={user}
           />
         ))}
         <Container>
-          <Button onClick={() => createNewColumn()}>Создать новую колонку</Button>
+          <Button onClick={() => dispatch(createColumn())}>Создать новую колонку</Button>
         </Container>
       </div>
     </div>
