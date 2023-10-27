@@ -1,32 +1,23 @@
 import { FC } from "react";
 import Card from "../card-item/Card";
-import { Column, Id, Task } from "../../types/types";
+import { Column, Task } from "../../types/types";
 import { Container, Input } from "../board-item/BoardItems";
 import { Button } from "../UI/Button";
 import { useDispatch } from "react-redux";
 import { changeColumnName, deleteColumn } from "../../redux/columns";
+import { createTask } from "../../redux/tasks";
 
 type ColumnNameProps = {
   column: Column;
   tasks: Task[];
-  addNewTask: (user: string, columnId: Id) => void;
-  updateTask: (id: Id, content: string) => void;
-  deleteTask: (id: Id) => void;
-  addComment: (id: Id, content: string, authorComment?: string) => void;
-  deleteComment: (taskId: Id, commentId: Id) => void;
-  updateComment: (taskId: Id, commentId: Id, content: string) => void;
+
   user: string;
 };
 
 const ColumnKanban: FC<ColumnNameProps> = ({
   column,
   tasks,
-  addNewTask,
-  updateTask,
-  deleteTask,
-  addComment,
-  deleteComment,
-  updateComment,
+
   user,
 }) => {
   const dispatch = useDispatch();
@@ -48,18 +39,12 @@ const ColumnKanban: FC<ColumnNameProps> = ({
       </div>
 
       {tasks.map((task) => (
-        <Card
-          key={task.id}
-          task={task}
-          addComment={addComment}
-          deleteTask={deleteTask}
-          updateTask={updateTask}
-          deleteComment={deleteComment}
-          updateComment={updateComment}
-        />
+        <Card key={task.id} task={task} />
       ))}
 
-      <Button onClick={() => addNewTask(user, column.id)}>Добавить карточку</Button>
+      <Button onClick={() => dispatch(createTask({ userName: user, columnId: column.id }))}>
+        Добавить карточку
+      </Button>
     </Container>
   );
 };

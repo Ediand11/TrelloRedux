@@ -122,9 +122,179 @@ const initialState: Task[] = [
 const tasks = createSlice({
   name: "tasks",
   initialState,
-  reducers: {},
+  reducers: {
+    createTask: (state, action) => {
+      const { userName, columnId } = action.payload;
+      const newTask = {
+        id: Math.floor(Math.random() * 10001).toString(),
+        columnId,
+        content: `Task ${state.length + 1}`,
+        author: userName,
+      };
+      state.push(newTask);
+    },
+
+    updateTask: (state, action) => {
+      const { id, content } = action.payload;
+
+      for (const task of state) {
+        if (task.id === id) {
+          if (typeof content === "string") {
+            task.content = content;
+          } else {
+            if (!Array.isArray(task.comments)) {
+              task.comments = [];
+            }
+            task.comments.push(content);
+          }
+          break; // Stop iterating further since the task has been found
+        }
+      }
+    },
+
+    deleteTask: (state, action) => {
+      const { id } = action.payload;
+      const index = state.findIndex((task) => task.id === id);
+      if (index !== -1) {
+        state.splice(index, 1);
+      }
+    },
+
+    addComment: (state, action) => {
+      const { taskId, contentComment, authorComment } = action.payload;
+
+      const newComment = {
+        idComment: Math.floor(Math.random() * 10001),
+        contentComment,
+        authorComment: authorComment || "G", // Assuming `user` is a global variable
+      };
+
+      const task = state.find((task) => task.id === taskId);
+      if (task) {
+        if (!Array.isArray(task.comments)) {
+          task.comments = []; // Initialize comments array if it doesn't exist
+        }
+        task.comments.push(newComment);
+      }
+    },
+
+    deleteComment: (state, action) => {
+      const { taskId, commentId } = action.payload;
+
+      const task = state.find((task) => task.id === taskId);
+      if (task && Array.isArray(task.comments)) {
+        task.comments = task.comments.filter((comment) => comment.idComment !== commentId);
+      }
+    },
+
+    updateComment: (state, action) => {
+      const { taskId, commentId, content } = action.payload;
+
+      const task = state.find((task) => task.id === taskId);
+      if (task && Array.isArray(task.comments)) {
+        const comment = task.comments.find((comment) => comment.idComment === commentId);
+        if (comment) {
+          comment.contentComment = content;
+        }
+      }
+    },
+  },
 });
 
-export const {} = tasks.actions;
+export const { createTask, updateTask, deleteTask, addComment, deleteComment, updateComment } =
+  tasks.actions;
 
 export default tasks.reducer;
+
+//---Comments--------------------------------
+// function addComment(taskId: Id, contentComment: string, authorComment: string = user) {
+//   const newComment: Comment = {
+//     idComment: Math.floor(Math.random() * 10001),
+//     contentComment,
+//     authorComment,
+//   };
+
+//   updateTask(taskId, newComment);
+// }
+
+// function deleteComment(taskId: Id, commentId: Id) {
+//   const updatedTasks = tasks.map((task) => {
+//     if (task.id === taskId) {
+//       const updatedComments =
+//         task.comments?.filter((comment) => comment.idComment !== commentId) || [];
+//       return {
+//         ...task,
+//         comments: updatedComments,
+//       };
+//     }
+//     return task;
+//   });
+
+//   setTasks(updatedTasks);
+// }
+
+// function updateComment(taskId: Id, commentId: Id, content: string) {
+//   const updatedTasks = tasks.map((task) => {
+//     if (task.id === taskId) {
+//       const updatedComments = (task.comments || []).map((comment) => {
+//         if (comment.idComment === commentId) {
+//           return {
+//             ...comment,
+//             contentComment: content,
+//           };
+//         }
+//         return comment;
+//       });
+
+//       return {
+//         ...task,
+//         comments: updatedComments,
+//       };
+//     }
+//     return task;
+//   });
+
+//   setTasks(updatedTasks);
+// }
+
+//
+/*
+const tasks = createSlice({
+  name: "tasks",
+  initialState,
+  reducers: {
+    createTask: (state, action) => {
+      const { userName, columnId } = action.payload;
+      const newTask = {
+        id: Math.floor(Math.random() * 10001),
+        columnId,
+        content: `Task ${state.tasks.length + 1}`,
+        author: userName,
+      };
+
+      state.tasks.push(newTask);
+    },
+    updateTask: (state, action) => {
+      const { id, content } = action.payload;
+      const task = state.tasks.find((task) => task.id === id);
+
+      if (!task) return;
+
+      if (typeof content === "string") {
+        task.content = content;
+      } else {
+        if (!task.comments) {
+          task.comments = [content];
+        } else {
+          task.comments.push(content);
+        }
+      }
+    },
+    deleteTask: (state, action) => {
+      const { id } = action.payload;
+      state.tasks = state.tasks.filter((task) => task.id !== id);
+    },
+  },
+});
+
+*/

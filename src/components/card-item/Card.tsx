@@ -1,30 +1,28 @@
 import { FC, useState } from "react";
-import { Id, Task } from "../../types/types";
+import { Task } from "../../types/types";
 import Popup from "../popup-item/Popup";
 import { CardSpan, CardTextArea } from "./CardItems";
 import { Button } from "../UI/Button";
 import CommentItem from "../comment-item/CommentItem";
+import {
+  addComment,
+  deleteComment,
+  deleteTask,
+  updateComment,
+  updateTask,
+} from "../../redux/tasks";
+import { useDispatch } from "react-redux";
 
 type TCardProps = {
   task: Task;
-  updateTask: (id: Id, content: string) => void;
-  deleteTask: (id: Id) => void;
-  addComment: (id: Id, content: string, authorComment?: string) => void;
-  deleteComment: (taskId: Id, commentId: Id) => void;
-  updateComment: (taskId: Id, commentId: Id, content: string) => void;
 };
 
-const Card: FC<TCardProps> = ({
-  task,
-  updateTask,
-  deleteTask,
-  addComment,
-  deleteComment,
-  updateComment,
-}) => {
+const Card: FC<TCardProps> = ({ task }) => {
   const [editMode, setEditMode] = useState(true);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [comment, setComment] = useState("");
+
+  const dispatch = useDispatch();
 
   const handleCardClick = () => {
     setPopupVisible((state) => !state);
@@ -37,7 +35,7 @@ const Card: FC<TCardProps> = ({
           <CardTextArea
             value={task.content}
             onChange={(e) => {
-              updateTask(task.id, e.target.value);
+              dispatch(updateTask({ id: task.id, content: e.target.value }));
             }}
             onBlur={() => setEditMode(false)}
             autoFocus
@@ -49,7 +47,7 @@ const Card: FC<TCardProps> = ({
         ) : (
           <CardSpan onClick={handleCardClick}>{task.content}</CardSpan>
         )}
-        <Button onClick={() => deleteTask(task.id)}>X</Button>
+        <Button onClick={() => dispatch(deleteTask(task.id))}>X</Button>
       </div>
 
       {isPopupVisible && (
@@ -59,7 +57,7 @@ const Card: FC<TCardProps> = ({
             style={{ height: "100px" }}
             value={task.content}
             onChange={(e) => {
-              updateTask(task.id, e.target.value);
+              dispatch(updateTask({ id: task.id, content: e.target.value }));
             }}
             onBlur={() => setEditMode(false)}
             autoFocus
@@ -81,7 +79,9 @@ const Card: FC<TCardProps> = ({
             <Button
               onClick={(e) => {
                 e.preventDefault();
-                addComment(task.id, comment);
+                dispatch(
+                  addComment({ taskId: task.id, contentComment: comment, authorComment: "" })
+                );
                 setComment("");
               }}
             >
@@ -96,10 +96,10 @@ const Card: FC<TCardProps> = ({
               authorComment={comment.authorComment}
               contentComment={comment.contentComment}
               deleteComment={() => {
-                deleteComment(task.id, comment.idComment);
+                dispatch(deleteComment({ taskId: task.id, commentId: comment.idComment }));
               }}
               updateComment={(content) => {
-                updateComment(task.id, comment.idComment, content);
+                dispatch(updateComment({ taskId: task.id, commentId: comment.idComment, content }));
               }}
             />
           ))}
