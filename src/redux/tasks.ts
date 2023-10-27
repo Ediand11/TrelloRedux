@@ -154,10 +154,13 @@ const tasks = createSlice({
 
     deleteTask: (state, action) => {
       const { id } = action.payload;
-      const index = state.findIndex((task) => task.id === id);
-      if (index !== -1) {
-        state.splice(index, 1);
-      }
+      return state.filter((task) => task.id !== id);
+    },
+
+    deleteTasksColumn: (state, action) => {
+      const { id } = action.payload;
+
+      return state.filter((task) => task.columnId !== id);
     },
 
     addComment: (state, action) => {
@@ -201,7 +204,14 @@ const tasks = createSlice({
   },
 });
 
-export const { createTask, updateTask, deleteTask, addComment, deleteComment, updateComment } =
-  tasks.actions;
+export const {
+  createTask,
+  updateTask,
+  deleteTask,
+  addComment,
+  deleteComment,
+  updateComment,
+  deleteTasksColumn,
+} = tasks.actions;
 
 export default tasks.reducer;

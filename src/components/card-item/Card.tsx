@@ -47,7 +47,7 @@ const Card: FC<TCardProps> = ({ task }) => {
         ) : (
           <CardSpan onClick={handleCardClick}>{task.content}</CardSpan>
         )}
-        <Button onClick={() => dispatch(deleteTask(task.id))}>X</Button>
+        <Button onClick={() => dispatch(deleteTask({ id: task.id }))}>X</Button>
       </div>
 
       {isPopupVisible && (

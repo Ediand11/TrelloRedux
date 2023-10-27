@@ -20,10 +20,6 @@ const Board: FC = () => {
     localStorage.setItem("user", JSON.stringify(user));
   }, [user]);
 
-  //Позже вынести функции в отдельный файл
-
-  //----------------------------------------------------------------
-
   const [isPopupVisibleUser, setIsPopupVisibleUser] = useState<boolean>(() => !user);
 
   const handleCardClick = () => {

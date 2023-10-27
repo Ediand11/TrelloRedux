@@ -5,7 +5,7 @@ import { Container, Input } from "../board-item/BoardItems";
 import { Button } from "../UI/Button";
 import { useDispatch } from "react-redux";
 import { changeColumnName, deleteColumn } from "../../redux/columns";
-import { createTask } from "../../redux/tasks";
+import { createTask, deleteTasksColumn } from "../../redux/tasks";
 
 type ColumnNameProps = {
   column: Column;
@@ -32,7 +32,10 @@ const ColumnKanban: FC<ColumnNameProps> = ({
         />
         <Button
           style={{ border: "none", outline: "none", borderRadius: 12 }}
-          onClick={() => dispatch(deleteColumn(column.id))}
+          onClick={() => {
+            dispatch(deleteColumn(column.id));
+            dispatch(deleteTasksColumn({ id: column.id }));
+          }}
         >
           X
         </Button>

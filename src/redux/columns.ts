@@ -27,7 +27,6 @@ const columns = createSlice({
       });
     },
     deleteColumn: (state, action) => state.filter((column) => column.id !== action.payload),
-    // Добавить удаление tasks
   },
 });
 
