@@ -34,12 +34,3 @@ const columns = createSlice({
 export const { changeColumnName, createColumn, deleteColumn } = columns.actions;
 
 export default columns.reducer;
-
-//functions
-
-// function deleteColumn(id: Id) {
-//   const filteredColumns = columns.filter((col) => col.id !== id);
-//   setColumns(filteredColumns);
-//   const newTasks = tasks.filter((task) => task.columnId !== id);
-//   setTasks([...newTasks]);
-// }

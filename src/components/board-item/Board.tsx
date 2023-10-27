@@ -53,11 +53,7 @@ const Board: FC = () => {
           <ColumnKanban
             key={column.id}
             column={column}
-            //Tasks
             tasks={tasks.filter((task) => task.columnId === column.id)}
-            //Comment
-
-            //User
             user={user}
           />
         ))}
