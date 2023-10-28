@@ -11,7 +11,8 @@ import {
   updateComment,
   updateTask,
 } from "../../redux/tasks";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 type TCardProps = {
   task: Task;
@@ -22,6 +23,7 @@ const Card: FC<TCardProps> = ({ task }) => {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [comment, setComment] = useState("");
 
+  const user = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
 
   const handleCardClick = () => {
@@ -80,7 +82,11 @@ const Card: FC<TCardProps> = ({ task }) => {
               onClick={(e) => {
                 e.preventDefault();
                 dispatch(
-                  addComment({ taskId: task.id, contentComment: comment, authorComment: "" })
+                  addComment({
+                    taskId: task.id,
+                    contentComment: comment,
+                    authorComment: user.userName,
+                  })
                 );
                 setComment("");
               }}

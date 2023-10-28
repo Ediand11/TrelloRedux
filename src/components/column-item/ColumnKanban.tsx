@@ -3,23 +3,18 @@ import Card from "../card-item/Card";
 import { Column, Task } from "../../types/types";
 import { Container, Input } from "../board-item/BoardItems";
 import { Button } from "../UI/Button";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { changeColumnName, deleteColumn } from "../../redux/columns";
 import { createTask, deleteTasksColumn } from "../../redux/tasks";
+import { RootState } from "../../redux/store";
 
 type ColumnNameProps = {
   column: Column;
   tasks: Task[];
-
-  user: string;
 };
 
-const ColumnKanban: FC<ColumnNameProps> = ({
-  column,
-  tasks,
-
-  user,
-}) => {
+const ColumnKanban: FC<ColumnNameProps> = ({ column, tasks }) => {
+  const user = useSelector((state: RootState) => state.user.userName);
   const dispatch = useDispatch();
 
   return (
