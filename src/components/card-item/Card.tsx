@@ -23,7 +23,7 @@ const Card: FC<TCardProps> = ({ task }) => {
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [comment, setComment] = useState("");
 
-  const user = useSelector((state: RootState) => state.user);
+  const user = useSelector((state: RootState) => state.user.userName);
   const dispatch = useDispatch();
 
   const handleCardClick = () => {
@@ -85,7 +85,7 @@ const Card: FC<TCardProps> = ({ task }) => {
                   addComment({
                     taskId: task.id,
                     contentComment: comment,
-                    authorComment: user.userName,
+                    authorComment: user,
                   })
                 );
                 setComment("");
