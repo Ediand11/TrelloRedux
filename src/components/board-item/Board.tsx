@@ -11,7 +11,6 @@ import { changeUserName } from "../../redux/user";
 const Board: FC = () => {
   const dispatch = useDispatch();
   const columns = useSelector((state: RootState) => state.columns);
-  const tasks = useSelector((state: RootState) => state.tasks);
   const user = useSelector((state: RootState) => state.user.userName);
 
   const [isPopupVisibleUser, setIsPopupVisibleUser] = useState<boolean>(() => !user);
@@ -40,11 +39,7 @@ const Board: FC = () => {
         )}
 
         {columns.map((column) => (
-          <ColumnKanban
-            key={column.id}
-            column={column}
-            tasks={tasks.filter((task) => task.columnId === column.id)}
-          />
+          <ColumnKanban key={column.id} column={column} />
         ))}
         <Container>
           <Button onClick={() => dispatch(createColumn())}>Создать новую колонку</Button>
