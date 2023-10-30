@@ -13,21 +13,45 @@ import {
 } from "../../redux/tasks";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 type TCardProps = {
   task: Task;
 };
 
+type TCommentContent = {
+  contentComment: string;
+};
+
 const Card: FC<TCardProps> = ({ task }) => {
   const [editMode, setEditMode] = useState(true);
   const [isPopupVisible, setPopupVisible] = useState(false);
-  const [comment, setComment] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<TCommentContent>({
+    reValidateMode: "onChange",
+  });
 
   const user = useSelector((state: RootState) => state.user.userName);
   const dispatch = useDispatch();
 
   const handleCardClick = () => {
     setPopupVisible((state) => !state);
+  };
+
+  const onSubmit: SubmitHandler<TCommentContent> = (data) => {
+    dispatch(
+      addComment({
+        taskId: task.id,
+        contentComment: data.contentComment,
+        authorComment: user,
+      })
+    );
+    reset();
   };
 
   return (
@@ -70,30 +94,17 @@ const Card: FC<TCardProps> = ({ task }) => {
           />
           <h3>Comment</h3>
 
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <CardTextArea
-              value={comment}
-              onChange={(e) => {
-                setComment(e.target.value);
-              }}
+              {...register("contentComment", { required: "Is nothing" })}
               placeholder={"Введите ваш комментарий"}
             />
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                dispatch(
-                  addComment({
-                    taskId: task.id,
-                    contentComment: comment,
-                    authorComment: user,
-                  })
-                );
-                setComment("");
-              }}
-            >
-              Добавить коммент
-            </Button>
+            <Button type="submit">Добавить коммент</Button>
           </form>
+
+          {errors?.contentComment && (
+            <div style={{ textAlign: "center" }}>{errors.contentComment.message}</div>
+          )}
 
           {task.comments?.map((comment) => (
             <CommentItem
