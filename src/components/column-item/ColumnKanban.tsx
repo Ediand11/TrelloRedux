@@ -1,20 +1,18 @@
 import { FC } from "react";
 import Card from "../card-item/Card";
-import { Column, Task } from "../../types/types";
+import { Column } from "../../types/types";
 import { Container, Input } from "../board-item/BoardItems";
 import { Button } from "../UI/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { changeColumnName, deleteColumn } from "../../redux/columns";
 import { createTask, deleteTasksColumn } from "../../redux/tasks";
 import { RootState } from "../../redux/store";
+import { getTasksByColumnId } from "../../redux/selectors";
 
-type ColumnNameProps = {
-  column: Column;
-  tasks: Task[];
-};
-
-const ColumnKanban: FC<ColumnNameProps> = ({ column, tasks }) => {
+const ColumnKanban: FC<{ column: Column }> = ({ column }) => {
   const user = useSelector((state: RootState) => state.user.userName);
+  const tasks = useSelector((state: RootState) => getTasksByColumnId(state, column.id));
+
   const dispatch = useDispatch();
 
   return (

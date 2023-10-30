@@ -12,7 +12,6 @@ const user = createSlice({
   reducers: {
     changeUserName: (state, action: PayloadAction<string>) => {
       state.userName = action.payload;
-      console.log(action.payload);
     },
   },
 });
