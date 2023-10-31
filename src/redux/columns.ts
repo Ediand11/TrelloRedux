@@ -1,5 +1,5 @@
-import { Column } from "../types/types";
-import { createSlice } from "@reduxjs/toolkit";
+import { Column, Id } from "../types/types";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialState: Column[] = [
   { id: "todo", title: "TODO" },
@@ -12,7 +12,7 @@ const columns = createSlice({
   name: "columns",
   initialState,
   reducers: {
-    changeColumnName: (state, action) => {
+    changeColumnName: (state, action: PayloadAction<{ id: Id; newTitle: string }>) => {
       const { id, newTitle } = action.payload;
       const columnToUpdate = state.find((column) => column.id === id);
 

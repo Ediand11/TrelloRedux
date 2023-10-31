@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { Task } from "../types/types";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { Id, Task } from "../types/types";
 
 const initialState: Task[] = [
   {
@@ -123,7 +123,7 @@ const tasks = createSlice({
   name: "tasks",
   initialState,
   reducers: {
-    createTask: (state, action) => {
+    createTask: (state, action: PayloadAction<{ userName: string; columnId: Id }>) => {
       const { userName, columnId } = action.payload;
       const newTask = {
         id: Math.floor(Math.random() * 10001).toString(),
@@ -134,7 +134,7 @@ const tasks = createSlice({
       state.push(newTask);
     },
 
-    updateTask: (state, action) => {
+    updateTask: (state, action: PayloadAction<{ id: Id; content: string }>) => {
       const { id, content } = action.payload;
 
       for (const task of state) {
@@ -152,24 +152,27 @@ const tasks = createSlice({
       }
     },
 
-    deleteTask: (state, action) => {
+    deleteTask: (state, action: PayloadAction<{ id: Id }>) => {
       const { id } = action.payload;
       return state.filter((task) => task.id !== id);
     },
 
-    deleteTasksColumn: (state, action) => {
+    deleteTasksColumn: (state, action: PayloadAction<{ id: Id }>) => {
       const { id } = action.payload;
 
       return state.filter((task) => task.columnId !== id);
     },
 
-    addComment: (state, action) => {
+    addComment: (
+      state,
+      action: PayloadAction<{ taskId: Id; contentComment: string; authorComment: string }>
+    ) => {
       const { taskId, contentComment, authorComment } = action.payload;
 
       const newComment = {
         idComment: Math.floor(Math.random() * 10001),
         contentComment,
-        authorComment: authorComment || "G", // Assuming `user` is a global variable
+        authorComment: authorComment || "Anonyms", // Assuming `user` is a global variable
       };
 
       const task = state.find((task) => task.id === taskId);
@@ -181,7 +184,7 @@ const tasks = createSlice({
       }
     },
 
-    deleteComment: (state, action) => {
+    deleteComment: (state, action: PayloadAction<{ taskId: Id; commentId: Id }>) => {
       const { taskId, commentId } = action.payload;
 
       const task = state.find((task) => task.id === taskId);
@@ -190,7 +193,10 @@ const tasks = createSlice({
       }
     },
 
-    updateComment: (state, action) => {
+    updateComment: (
+      state,
+      action: PayloadAction<{ taskId: Id; commentId: Id; content: string }>
+    ) => {
       const { taskId, commentId, content } = action.payload;
 
       const task = state.find((task) => task.id === taskId);
