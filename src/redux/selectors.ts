@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "./store";
-import { Column, Id } from "../types/types";
+import { Id } from "../types/types";
 
 const getTasks = (state: RootState) => state.tasks;
 const getColumnId = (state: RootState, columnId: Id) => columnId;
